@@ -1,0 +1,36 @@
+{
+	"name": "wren/user_rename",
+	"description": "Nextcloud app: rename a local user's uid",
+	"type": "project",
+	"license": "AGPL-3.0-or-later",
+	"autoload": {
+		"psr-4": {
+			"OCA\\UserRename\\": "lib/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"OCA\\UserRename\\Tests\\": "tests/",
+			"OCP\\": "vendor/nextcloud/ocp/OCP/",
+			"NCU\\": "vendor/nextcloud/ocp/NCU/"
+		}
+	},
+	"require": {
+		"php": ">=8.1"
+	},
+	"require-dev": {
+		"nextcloud/ocp": "^32.0 || ^33.0 || ^34.0 || ^35.0",
+		"phpunit/phpunit": "^10.5",
+		"doctrine/dbal": "^3.10",
+		"symfony/console": "^6.4 || ^7.0",
+		"psr/log": "^3.0"
+	},
+	"config": {
+		"platform": {
+			"php": "8.1"
+		}
+	},
+	"scripts": {
+		"test:unit": "phpunit -c tests/phpunit.xml"
+	}
+}

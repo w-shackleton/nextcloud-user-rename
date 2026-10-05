@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>user_rename</id>
+	<name>User Rename</name>
+	<summary>Rename a local user's uid (login name) with occ user:rename</summary>
+	<description><![CDATA[Adds the admin command `occ user:rename <old> <new>`, which renames a
+local (database backend) user's uid across the database and the data directory.
+
+Run `occ user:rename --dry-run` first. The command switches maintenance mode
+on for the duration of the rename. See README.md for limitations.]]></description>
+	<version>0.1.0</version>
+	<licence>agpl</licence>
+	<author mail="w.shackleton@gmail.com">wren</author>
+	<namespace>UserRename</namespace>
+	<category>tools</category>
+	<dependencies>
+		<php min-version="8.1"/>
+		<nextcloud min-version="32" max-version="36"/>
+	</dependencies>
+	<commands>
+		<command>OCA\UserRename\Command\Rename</command>
+		<command>OCA\UserRename\Command\Scan</command>
+	</commands>
+</info>
