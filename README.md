@@ -1,5 +1,7 @@
 # User Rename
 
+WARNING: This code is AI-generated. It's been used successfully on a real Nextcloud instance.
+
 A Nextcloud app that renames a local user's uid, which is also their login
 name, with an `occ` command:
 
@@ -56,11 +58,17 @@ to rename them instead, which keeps app passwords working.
 
 - **Remove and re-add the account in every desktop and mobile client.** The
   WebDAV URL contains the uid (`/remote.php/dav/files/<uid>/`).
+  - The desktop application can be fixed by stopping the app, editing its
+    config file, and restarting the app.
+  - The Android app - completely uninstall and reinstall the app.
 - Restart php-fpm or the web server, or flush APCu/Redis.
 - The federated cloud ID changes to `<new>@<host>`. Shares with other servers
   may need re-creating.
 - History keeps the old name in a few places: activity entries, @mentions in
   comment text, and the CardDAV change log (`addressbookchanges`).
+- If you hit login rate-limit errors, this means you have a client trying to
+  use the old username still. Stop the app and run `DELETE FROM oc_bruteforce_attempts;`
+  on the MySQL server.
 
 ## What is covered
 

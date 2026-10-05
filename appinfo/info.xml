@@ -11,7 +11,7 @@ Run `occ user:rename --dry-run` first. The command switches maintenance mode
 on for the duration of the rename. See README.md for limitations.]]></description>
 	<version>0.1.0</version>
 	<licence>agpl</licence>
-	<author mail="w.shackleton@gmail.com">wren</author>
+	<author mail="nextcloud-rename@shackleton.io">Wren Shackleton</author>
 	<namespace>UserRename</namespace>
 	<category>tools</category>
 	<dependencies>

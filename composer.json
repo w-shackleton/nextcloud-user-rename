@@ -1,5 +1,5 @@
 {
-	"name": "wren/user_rename",
+	"name": "w-shackleton/user_rename",
 	"description": "Nextcloud app: rename a local user's uid",
 	"type": "project",
 	"license": "AGPL-3.0-or-later",
