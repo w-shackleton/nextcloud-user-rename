@@ -1,6 +1,7 @@
 # User Rename
 
-WARNING: This code is AI-generated. It's been used successfully on a real Nextcloud instance.
+> [!WARNING]
+> **This code is AI-generated.** It's been used successfully on a real Nextcloud instance.
 
 A Nextcloud app that renames a local user's uid, which is also their login
 name, with an `occ` command:
