@@ -24,7 +24,7 @@ for what is covered, limitations and follow-up steps.]]></description>
 	<bugs>https://github.com/w-shackleton/nextcloud-user-rename/issues</bugs>
 	<repository type="git">https://github.com/w-shackleton/nextcloud-user-rename.git</repository>
 	<dependencies>
-		<php min-version="8.1"/>
+		<php min-version="8.3"/>
 		<nextcloud min-version="35" max-version="36"/>
 	</dependencies>
 	<commands>
