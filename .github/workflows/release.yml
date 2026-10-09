@@ -1,0 +1,81 @@
+# Adapted from nextcloud/.github workflow-templates/appstore-build-publish.yml.
+# Triggered by publishing a GitHub release whose tag is v<info.xml version>.
+name: Build and publish app release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+  APP_NAME: user_rename
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          path: ${{ env.APP_NAME }}
+
+      - name: Validate app version against tag
+        run: |
+          VERSION=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' $APP_NAME/appinfo/info.xml)
+          echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+          [ "$GITHUB_REF_NAME" = "v$VERSION" ] || { echo "Tag $GITHUB_REF_NAME does not match info.xml version $VERSION"; exit 1; }
+
+      - name: Set up php
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Package
+        run: make -C $APP_NAME appstore
+
+      - name: Download Nextcloud server for signing
+        run: |
+          NCVERSION=$(sed -n 's:.*<nextcloud min-version="\([0-9]*\)".*:\1:p' $APP_NAME/appinfo/info.xml)
+          DOWNLOAD_URL=$(curl -s "https://updates.nextcloud.com/updater_server/latest?channel=beta&version=$NCVERSION" | jq -r '.downloads.zip[0]')
+          if [ "$DOWNLOAD_URL" = "null" ]; then
+            DOWNLOAD_URL="https://download.nextcloud.com/server/releases/latest-$NCVERSION.zip"
+          fi
+          echo "Downloading $DOWNLOAD_URL"
+          wget --quiet "$DOWNLOAD_URL" -O nextcloud.zip
+          unzip -q nextcloud.zip
+
+      - name: Sign app
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+        run: |
+          printf '%s\n' "$APP_PRIVATE_KEY" > $APP_NAME.key
+          wget --quiet "https://github.com/nextcloud/app-certificate-requests/raw/master/$APP_NAME/$APP_NAME.crt"
+          php nextcloud/occ integrity:sign-app \
+            --privateKey=$PWD/$APP_NAME.key \
+            --certificate=$PWD/$APP_NAME.crt \
+            --path=$PWD/$APP_NAME/build/artifacts/$APP_NAME
+          tar -czf $APP_NAME/build/artifacts/$APP_NAME.tar.gz -C $APP_NAME/build/artifacts $APP_NAME
+          rm $APP_NAME.key
+
+      - name: Attach tarball to GitHub release
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # 2.11.5
+        id: attach_to_release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}.tar.gz
+          asset_name: ${{ env.APP_NAME }}-${{ github.ref_name }}.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true
+
+      - name: Upload app to Nextcloud appstore
+        uses: nextcloud-libraries/nextcloud-appstore-push-action@a011fe619bcf6e77ddebc96f9908e1af4071b9c1 # v1.0.3
+        with:
+          app_name: ${{ env.APP_NAME }}
+          appstore_token: ${{ secrets.APPSTORE_TOKEN }}
+          download_url: ${{ steps.attach_to_release.outputs.browser_download_url }}
+          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}

@@ -19,6 +19,16 @@ database transaction and moves `data/<uid>/`.
 Tested on Nextcloud 35.0.1 with MariaDB. `info.xml` declares 32–36. Rules
 for tables or columns missing from a version are skipped automatically.
 
+## Installing
+
+Install **User Rename** from the Nextcloud App Store (Apps → Tools), or with
+`sudo -u www-data php occ app:install user_rename`.
+
+To install by hand, download `user_rename-v<version>.tar.gz` from the
+[GitHub releases](https://github.com/w-shackleton/nextcloud-user-rename/releases),
+extract it into your `apps/` (or `custom_apps/`) directory, and run
+`sudo -u www-data php occ app:enable user_rename`.
+
 ## Before you run it
 
 1. **Back up the database and the data directory.**
@@ -122,3 +132,20 @@ NC_DIR=... DUMP_CMD="mysqldump -u.. -p.. --skip-extended-insert db" \
 `rename.sh` sets up fixtures through WebDAV and OCS, renames `alice` to
 `alicia`, checks 33 things, and fails if `alice` remains anywhere in a
 database dump outside the history tables.
+
+## Releasing
+
+1. Bump `<version>` in `appinfo/info.xml` and add a section to
+   `CHANGELOG.md`.
+2. Commit, then publish a GitHub release with tag `v<version>`, for example
+   `gh release create v0.1.0 --notes-from-tag`. The release workflow checks
+   that the tag matches info.xml, builds and signs the tarball, attaches it to
+   the release, and pushes it to the App Store.
+
+The workflow needs the repository secrets `APP_PRIVATE_KEY` (the app signing
+key) and `APPSTORE_TOKEN`. The certificate is fetched from
+[nextcloud/app-certificate-requests](https://github.com/nextcloud/app-certificate-requests/tree/master/user_rename).
+
+To build locally, run `make appstore`. To build and sign locally, run
+`make sign NC_DIR=/path/to/nextcloud`; the key and certificate are read from
+`CERT_DIR`.

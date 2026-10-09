@@ -7,13 +7,22 @@
 	<description><![CDATA[Adds the admin command `occ user:rename <old> <new>`, which renames a
 local (database backend) user's uid across the database and the data directory.
 
+**Warning:** this code is AI-generated. It has been used successfully on a real
+instance, but back up your database and data directory before using it.
+
 Run `occ user:rename --dry-run` first. The command switches maintenance mode
-on for the duration of the rename. See README.md for limitations.]]></description>
+on for the duration of the rename. Clients must re-add the account afterwards.
+
+See the [README](https://github.com/w-shackleton/nextcloud-user-rename#readme)
+for what is covered, limitations and follow-up steps.]]></description>
 	<version>0.1.0</version>
 	<licence>agpl</licence>
 	<author mail="nextcloud-rename@shackleton.io">Wren Shackleton</author>
 	<namespace>UserRename</namespace>
 	<category>tools</category>
+	<website>https://github.com/w-shackleton/nextcloud-user-rename</website>
+	<bugs>https://github.com/w-shackleton/nextcloud-user-rename/issues</bugs>
+	<repository type="git">https://github.com/w-shackleton/nextcloud-user-rename.git</repository>
 	<dependencies>
 		<php min-version="8.1"/>
 		<nextcloud min-version="32" max-version="36"/>
