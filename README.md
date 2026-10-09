@@ -1,7 +1,8 @@
 # User Rename
 
 > [!WARNING]
-> **This code is AI-generated.** It's been used successfully on a real Nextcloud instance.
+> **This code is AI-generated.** It's been used successfully on a real Nextcloud
+> instance.
 
 A Nextcloud app that renames a local user's uid, which is also their login
 name, with an `occ` command:
@@ -15,9 +16,6 @@ For local (Database backend) accounts, Nextcloud has no user ID separate from
 the login name. `oc_users.uid` is the login name, and dozens of tables and the
 data directory refer to the user by it. This app rewrites all of them in one
 database transaction and moves `data/<uid>/`.
-
-Tested on Nextcloud 35.0.1 with MariaDB. `info.xml` declares 32–36. Rules
-for tables or columns missing from a version are skipped automatically.
 
 ## Installing
 
@@ -141,10 +139,6 @@ database dump outside the history tables.
    `gh release create v0.1.0 --notes-from-tag`. The release workflow checks
    that the tag matches info.xml, builds and signs the tarball, attaches it to
    the release, and pushes it to the App Store.
-
-The workflow needs the repository secrets `APP_PRIVATE_KEY` (the app signing
-key) and `APPSTORE_TOKEN`. The certificate is fetched from
-[nextcloud/app-certificate-requests](https://github.com/nextcloud/app-certificate-requests/tree/master/user_rename).
 
 To build locally, run `make appstore`. To build and sign locally, run
 `make sign NC_DIR=/path/to/nextcloud`; the key and certificate are read from

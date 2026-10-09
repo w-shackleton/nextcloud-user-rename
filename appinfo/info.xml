@@ -25,7 +25,7 @@ for what is covered, limitations and follow-up steps.]]></description>
 	<repository type="git">https://github.com/w-shackleton/nextcloud-user-rename.git</repository>
 	<dependencies>
 		<php min-version="8.1"/>
-		<nextcloud min-version="32" max-version="36"/>
+		<nextcloud min-version="35" max-version="36"/>
 	</dependencies>
 	<commands>
 		<command>OCA\UserRename\Command\Rename</command>
